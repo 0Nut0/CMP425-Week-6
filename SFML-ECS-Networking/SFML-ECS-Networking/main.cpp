@@ -74,6 +74,7 @@ int main() {
 
 	if (listener.listen(port) == sf::Socket::Status::Error) {
 		// FIXME: we need to handle the error and make sure we don't try to accept, etc. if the listen fails.
+	
 	}
 
 	// Clock for timing the 'dt' value
@@ -87,7 +88,7 @@ int main() {
 	std::vector<Connection> player_connections;
 
 	// Other game parameters.
-	float send_rate = 0.1f;
+	float send_rate = 0.5f;
 	float reconnect_delay = 1.f;
 	float send_timer = 1.f;
 	bool is_connected = false;
@@ -230,7 +231,10 @@ int main() {
 					Utils::printMsg("dt = " + std::to_string(dt) + ", Inter t = " + std::to_string(player_connections[i].inter_t), MessageType::info);
 #endif // DEBUG
 					// Get actual position based on interpolation method.
-					sf::Vector2f interpolated_pos = player_connections[i].Interpolate(dt);
+					//sf::Vector2f interpolated_pos = player_connections[i].Interpolate(dt);
+					//sf::Vector2f interpolated_pos = player_connections[i].interpolate_with_prediction(dt, PredictionMethod::Linear);
+					sf::Vector2f interpolated_pos = player_connections[i].interpolate_with_prediction(dt, PredictionMethod::Quadratic);
+
 
 					// Construct message with actual positon.
 					TankMessage interpolated_msg = {
